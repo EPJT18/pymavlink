@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<mavlink>
+  <!-- Swooparu:                                     -->
+  <!-- mavlink ID range: 6900 - 6999                            -->
+  <enums>
+    <enum name="SWOOP_ARMING_CHECK_FLAGS">
+      <description>Flag bits to indicate which of the arming checks is failing</description>
+      <entry value="1" name="SAFETY_SWITCH_DISSABLED"/>  <!-- 0 -->
+      <!-- gave up listing them all, just start with a single simple one to learn-->
+      <entry value="2" name="BAROMETER_NOT_HEALTHY"/> <!-- 1 -->
+      <entry value="4" name="GYRO_NOT_HEALTHY"/> <!-- 2 -->
+      <entry value="8" name="GYRO_NOT_CALIBRATED"/> <!-- 3 -->
+      <entry value="16" name="GYROS_INCONSISTENT"/> <!-- 4 -->
+      <entry value="32" name="ACCELS_NOT_HEALTHY"/> <!-- 5 -->
+      <entry value="64" name="ACCELS_NOT_CALIBRATED"/> <!-- 6 -->
+      <entry value="128" name="ACCELS_INCONSISTENT"/> <!-- 7 -->
+      <entry value="256" name="COMPASS_NOT_HEALTHY"/> <!-- 8 -->
+      <entry value="512" name="COMPASS_NOT_CALIBRATED"/> <!-- 9 -->
+      <entry value="1024" name="COMPASS_INCONSISTENT"/> <!-- 10 -->
+      <entry value="2048" name="COMPASS_OFFSETS"/> <!-- 11 -->
+      <entry value="4096" name="HIGH_MAG_FIELD_STRENGTH"/> <!-- 12 -->
+      <entry value="8192" name="BAD_GPS_POSITION"/> <!-- 13 -->
+      <entry value="16384" name="GPS_NOT_HEALTHY"/> <!-- 14 -->
+    
+      <!--<entry value="1" name="GPS_POSITIONS_DIFFERENT"/>  --><!-- 15 -->
+      <!--<entry value="2" name="GPS_BLENDING_UNHEALTHY"/>--><!-- 16 -->
+      <!--<entry value="4" name="GPS_DIFFERENT_TO_EKF"/>--><!-- 17 -->
+      <!--<entry value="8" name="BAD_PARAMS"/>--><!-- 18 -->
+      <!--<entry value="16" name="BATTERY_PROBLEM"/>--><!-- 19 There are > 100 sub variants of these, but not much point when we dont use them-->
+      <!--<entry value="1024" name="LOGGING_FAILED"/>--> <!-- 10 -->
+      <!--<entry value="2048" name="NO_SD_CARD"/> --><!-- 11 -->
+      <!--<entry value="4096" name="MANUAL_TRANSMITTER_PROBLEM"/> --><!-- 12 again, duh, we dont use these-->
+      <!--<entry value="8192" name="NO_MISSION_LOADED"/>--> <!-- 13 -->
+
+    </enum>
+    <enum name="SWOOP_AUTO_ACTION_FLAGS">
+      <description>Flag bits to indicate when a failure event has been detected</description>
+      <entry value="1" name="HOVER_ASSIST_TRIGGERED"/>
+      <entry value="2" name="HOVER_ASSIST_REASON_ALT"/>
+      <entry value="4" name="HOVER_ASSIST_REASON_SPEED"/>
+      <entry value="8" name="HOVER_ASSIST_REASON_ATTITUDE"/>
+      <entry value="16" name="HOVER_ASSIST_COUNTER_TIMEOUT"/>
+      <entry value="32" name="HOVER_ASSIST_LONG_TIMEOUT"/>
+
+    </enum>
+    
+  </enums>
+  <messages>
+    <message id="6901" name="SWOOP_FLAGS">
+      <description>Periodic Status Flag Packet</description>
+      <field type="uint32_t" name="armingFlags" enum="SWOOP_ARMING_CHECK_FLAGS">Flag bits to indicate which of the arming checks is failing</field>
+      <field type="uint32_t" name="actionFlags" enum="SWOOP_AUTO_ACTION_FLAGS">Flag bits to indicate when a failure event has been detected</field>
+    </message>
+    
+  </messages>
+</mavlink>
