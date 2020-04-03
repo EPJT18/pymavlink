@@ -548,8 +548,10 @@ PARACHUTE_DEPLOYED = 10 #
 enums['SWOOP_STATUS_TYPE'][10] = EnumEntry('PARACHUTE_DEPLOYED', '''''')
 ABORTING_TAKEOFF = 11 # 
 enums['SWOOP_STATUS_TYPE'][11] = EnumEntry('ABORTING_TAKEOFF', '''''')
-SWOOP_STATUS_TYPE_ENUM_END = 12 # 
-enums['SWOOP_STATUS_TYPE'][12] = EnumEntry('SWOOP_STATUS_TYPE_ENUM_END', '''''')
+STATUS_OTHER = 12 # 
+enums['SWOOP_STATUS_TYPE'][12] = EnumEntry('STATUS_OTHER', '''''')
+SWOOP_STATUS_TYPE_ENUM_END = 13 # 
+enums['SWOOP_STATUS_TYPE'][13] = EnumEntry('SWOOP_STATUS_TYPE_ENUM_END', '''''')
 
 # SWOOP_INFLIGHT_FLAGS
 enums['SWOOP_INFLIGHT_FLAGS'] = {}
@@ -757,18 +759,18 @@ class MAVLink_swoop_status_message(MAVLink_message):
         id = MAVLINK_MSG_ID_SWOOP_STATUS
         name = 'SWOOP_STATUS'
         fieldnames = ['flightStatus', 'waypointType', 'nextWaypointType']
-        ordered_fieldnames = ['flightStatus', 'waypointType', 'nextWaypointType']
-        fieldtypes = ['uint8_t', 'uint8_t', 'uint8_t']
+        ordered_fieldnames = ['waypointType', 'nextWaypointType', 'flightStatus']
+        fieldtypes = ['uint8_t', 'uint16_t', 'uint16_t']
         fielddisplays_by_name = {}
         fieldenums_by_name = {"flightStatus": "SWOOP_STATUS_TYPE"}
         fieldunits_by_name = {}
-        format = '<BBB'
-        native_format = bytearray('<BBB', 'ascii')
-        orders = [0, 1, 2]
+        format = '<HHB'
+        native_format = bytearray('<HHB', 'ascii')
+        orders = [2, 0, 1]
         lengths = [1, 1, 1]
         array_lengths = [0, 0, 0]
-        crc_extra = 160
-        unpacker = struct.Struct('<BBB')
+        crc_extra = 210
+        unpacker = struct.Struct('<HHB')
 
         def __init__(self, flightStatus, waypointType, nextWaypointType):
                 MAVLink_message.__init__(self, MAVLink_swoop_status_message.id, MAVLink_swoop_status_message.name)
@@ -778,7 +780,7 @@ class MAVLink_swoop_status_message(MAVLink_message):
                 self.nextWaypointType = nextWaypointType
 
         def pack(self, mav, force_mavlink1=False):
-                return MAVLink_message.pack(self, mav, 160, struct.pack('<BBB', self.flightStatus, self.waypointType, self.nextWaypointType), force_mavlink1=force_mavlink1)
+                return MAVLink_message.pack(self, mav, 210, struct.pack('<HHB', self.waypointType, self.nextWaypointType, self.flightStatus), force_mavlink1=force_mavlink1)
 
 class MAVLink_swoop_energy_message(MAVLink_message):
         '''
@@ -1425,8 +1427,8 @@ class MAVLink(object):
                 Periodic flight status Flag Packet
 
                 flightStatus              : Enumerated type for flight stage (type:uint8_t, values:SWOOP_STATUS_TYPE)
-                waypointType              : Current waypoint type (type:uint8_t)
-                nextWaypointType          : Current waypoint type (type:uint8_t)
+                waypointType              : Current waypoint type (type:uint16_t)
+                nextWaypointType          : Current waypoint type (type:uint16_t)
 
                 '''
                 return MAVLink_swoop_status_message(flightStatus, waypointType, nextWaypointType)
@@ -1436,8 +1438,8 @@ class MAVLink(object):
                 Periodic flight status Flag Packet
 
                 flightStatus              : Enumerated type for flight stage (type:uint8_t, values:SWOOP_STATUS_TYPE)
-                waypointType              : Current waypoint type (type:uint8_t)
-                nextWaypointType          : Current waypoint type (type:uint8_t)
+                waypointType              : Current waypoint type (type:uint16_t)
+                nextWaypointType          : Current waypoint type (type:uint16_t)
 
                 '''
                 return self.send(self.swoop_status_encode(flightStatus, waypointType, nextWaypointType), force_mavlink1=force_mavlink1)
