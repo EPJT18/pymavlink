@@ -235,6 +235,15 @@ enums['SWOOP_ARMING_CHECKS_PASSED'][1] = EnumEntry('ARMING_CHECK_FAILED', ''''''
 SWOOP_ARMING_CHECKS_PASSED_ENUM_END = 2 # 
 enums['SWOOP_ARMING_CHECKS_PASSED'][2] = EnumEntry('SWOOP_ARMING_CHECKS_PASSED_ENUM_END', '''''')
 
+# SWOOP_BATTERY_HEALTH
+enums['SWOOP_BATTERY_HEALTH'] = {}
+BATTERY_NOT_HEATLHY = 0 # 
+enums['SWOOP_BATTERY_HEALTH'][0] = EnumEntry('BATTERY_NOT_HEATLHY', '''''')
+BATTERY_HEALTHY = 1 # 
+enums['SWOOP_BATTERY_HEALTH'][1] = EnumEntry('BATTERY_HEALTHY', '''''')
+SWOOP_BATTERY_HEALTH_ENUM_END = 2 # 
+enums['SWOOP_BATTERY_HEALTH'][2] = EnumEntry('SWOOP_BATTERY_HEALTH_ENUM_END', '''''')
+
 # SWOOP_ARMING_CHECK_DETAIL_1
 enums['SWOOP_ARMING_CHECK_DETAIL_1'] = {}
 SAFETY_SWITCH_DISSABLED = 1 # 
@@ -585,6 +594,7 @@ MAVLINK_MSG_ID_SWOOP_ARMING_FLAGS = 6901
 MAVLINK_MSG_ID_SWOOP_INFLIGHT_FLAGS_INSTANT = 6902
 MAVLINK_MSG_ID_SWOOP_INFLIGHT_FLAGS_PERSISTENT = 6903
 MAVLINK_MSG_ID_SWOOP_STATUS = 6904
+MAVLINK_MSG_ID_SWOOP_ENERGY = 6905
 
 class MAVLink_swoop_arming_flags_message(MAVLink_message):
         '''
@@ -596,7 +606,7 @@ class MAVLink_swoop_arming_flags_message(MAVLink_message):
         ordered_fieldnames = ['armingCheckFlags1', 'armingCheckFlags2', 'armingCheckFlags3', 'armingCheckStatus']
         fieldtypes = ['uint8_t', 'uint16_t', 'uint16_t', 'uint16_t']
         fielddisplays_by_name = {}
-        fieldenums_by_name = {"armingCheckStatus": "SWOOP_ARMING_CHECKS_PASSED", "armingCheckFlags1": "SWOOP_ARMING_CHECK_DETAIL_1", "armingCheckFlags2": "SWOOP_ARMING_CHECK_DETAIL_2", "armingCheckFlags3": "SWOOP_ARMING_CHECK_DETAIL_3"}
+        fieldenums_by_name = {"armingCheckStatus": "SWOOP_ARMING_CHECKS_PASSED", "armingCheckFlags1": "SWOOP_ARMING_CHECK_DETAIL_1", "armingCheckFlags2": "SWOOP_ARMING_CHECK_DETAIL_2", "armingCheckFlags3": "SWOOP_ARMING_CHECK_COMMON"}
         fieldunits_by_name = {}
         format = '<HHHB'
         native_format = bytearray('<HHHB', 'ascii')
@@ -746,27 +756,66 @@ class MAVLink_swoop_status_message(MAVLink_message):
         '''
         id = MAVLINK_MSG_ID_SWOOP_STATUS
         name = 'SWOOP_STATUS'
-        fieldnames = ['flightStatus']
-        ordered_fieldnames = ['flightStatus']
-        fieldtypes = ['uint8_t']
+        fieldnames = ['flightStatus', 'waypointType', 'nextWaypointType']
+        ordered_fieldnames = ['flightStatus', 'waypointType', 'nextWaypointType']
+        fieldtypes = ['uint8_t', 'uint8_t', 'uint8_t']
         fielddisplays_by_name = {}
         fieldenums_by_name = {"flightStatus": "SWOOP_STATUS_TYPE"}
         fieldunits_by_name = {}
-        format = '<B'
-        native_format = bytearray('<B', 'ascii')
-        orders = [0]
-        lengths = [1]
-        array_lengths = [0]
-        crc_extra = 170
-        unpacker = struct.Struct('<B')
+        format = '<BBB'
+        native_format = bytearray('<BBB', 'ascii')
+        orders = [0, 1, 2]
+        lengths = [1, 1, 1]
+        array_lengths = [0, 0, 0]
+        crc_extra = 160
+        unpacker = struct.Struct('<BBB')
 
-        def __init__(self, flightStatus):
+        def __init__(self, flightStatus, waypointType, nextWaypointType):
                 MAVLink_message.__init__(self, MAVLink_swoop_status_message.id, MAVLink_swoop_status_message.name)
                 self._fieldnames = MAVLink_swoop_status_message.fieldnames
                 self.flightStatus = flightStatus
+                self.waypointType = waypointType
+                self.nextWaypointType = nextWaypointType
 
         def pack(self, mav, force_mavlink1=False):
-                return MAVLink_message.pack(self, mav, 170, struct.pack('<B', self.flightStatus), force_mavlink1=force_mavlink1)
+                return MAVLink_message.pack(self, mav, 160, struct.pack('<BBB', self.flightStatus, self.waypointType, self.nextWaypointType), force_mavlink1=force_mavlink1)
+
+class MAVLink_swoop_energy_message(MAVLink_message):
+        '''
+        range remaining data
+        '''
+        id = MAVLINK_MSG_ID_SWOOP_ENERGY
+        name = 'SWOOP_ENERGY'
+        fieldnames = ['ForwardEndurance', 'ForwardHealth', 'ForwardWHrPortionRemaining', 'HoverETR', 'HoverEndurance', 'HoverWHrPortionRemaining', 'ForwardTimeToNextLanding', 'ForwardTimeToEndOfMission', 'HoverTimeToNextLanding', 'HoverTimeToEndOfMission']
+        ordered_fieldnames = ['ForwardEndurance', 'HoverETR', 'ForwardTimeToNextLanding', 'ForwardTimeToEndOfMission', 'HoverTimeToNextLanding', 'HoverTimeToEndOfMission', 'ForwardHealth', 'ForwardWHrPortionRemaining', 'HoverEndurance', 'HoverWHrPortionRemaining']
+        fieldtypes = ['uint16_t', 'uint8_t', 'uint8_t', 'uint16_t', 'uint8_t', 'uint8_t', 'uint16_t', 'uint16_t', 'uint16_t', 'uint16_t']
+        fielddisplays_by_name = {}
+        fieldenums_by_name = {}
+        fieldunits_by_name = {"ForwardEndurance": "s", "ForwardWHrPortionRemaining": "%", "HoverETR": "s", "HoverWHrPortionRemaining": "%", "ForwardTimeToNextLanding": "s", "ForwardTimeToEndOfMission": "s", "HoverTimeToNextLanding": "s", "HoverTimeToEndOfMission": "s"}
+        format = '<HHHHHHBBBB'
+        native_format = bytearray('<HHHHHHBBBB', 'ascii')
+        orders = [0, 6, 7, 1, 8, 9, 2, 3, 4, 5]
+        lengths = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        array_lengths = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        crc_extra = 160
+        unpacker = struct.Struct('<HHHHHHBBBB')
+
+        def __init__(self, ForwardEndurance, ForwardHealth, ForwardWHrPortionRemaining, HoverETR, HoverEndurance, HoverWHrPortionRemaining, ForwardTimeToNextLanding, ForwardTimeToEndOfMission, HoverTimeToNextLanding, HoverTimeToEndOfMission):
+                MAVLink_message.__init__(self, MAVLink_swoop_energy_message.id, MAVLink_swoop_energy_message.name)
+                self._fieldnames = MAVLink_swoop_energy_message.fieldnames
+                self.ForwardEndurance = ForwardEndurance
+                self.ForwardHealth = ForwardHealth
+                self.ForwardWHrPortionRemaining = ForwardWHrPortionRemaining
+                self.HoverETR = HoverETR
+                self.HoverEndurance = HoverEndurance
+                self.HoverWHrPortionRemaining = HoverWHrPortionRemaining
+                self.ForwardTimeToNextLanding = ForwardTimeToNextLanding
+                self.ForwardTimeToEndOfMission = ForwardTimeToEndOfMission
+                self.HoverTimeToNextLanding = HoverTimeToNextLanding
+                self.HoverTimeToEndOfMission = HoverTimeToEndOfMission
+
+        def pack(self, mav, force_mavlink1=False):
+                return MAVLink_message.pack(self, mav, 160, struct.pack('<HHHHHHBBBB', self.ForwardEndurance, self.HoverETR, self.ForwardTimeToNextLanding, self.ForwardTimeToEndOfMission, self.HoverTimeToNextLanding, self.HoverTimeToEndOfMission, self.ForwardHealth, self.ForwardWHrPortionRemaining, self.HoverEndurance, self.HoverWHrPortionRemaining), force_mavlink1=force_mavlink1)
 
 
 mavlink_map = {
@@ -774,6 +823,7 @@ mavlink_map = {
         MAVLINK_MSG_ID_SWOOP_INFLIGHT_FLAGS_INSTANT : MAVLink_swoop_inflight_flags_instant_message,
         MAVLINK_MSG_ID_SWOOP_INFLIGHT_FLAGS_PERSISTENT : MAVLink_swoop_inflight_flags_persistent_message,
         MAVLINK_MSG_ID_SWOOP_STATUS : MAVLink_swoop_status_message,
+        MAVLINK_MSG_ID_SWOOP_ENERGY : MAVLink_swoop_energy_message,
 }
 
 class MAVError(Exception):
@@ -1185,7 +1235,7 @@ class MAVLink(object):
                 armingCheckStatus         : 0 if all arming checks have passed, false otherwise (type:uint8_t, values:SWOOP_ARMING_CHECKS_PASSED)
                 armingCheckFlags1         : Flag bits to indicate which of the arming checks is failing (type:uint16_t, values:SWOOP_ARMING_CHECK_DETAIL_1)
                 armingCheckFlags2         : Flag bits to indicate which of the arming checks is failing (type:uint16_t, values:SWOOP_ARMING_CHECK_DETAIL_2)
-                armingCheckFlags3         : Flag bits to indicate which of the arming checks is failing (type:uint16_t, values:SWOOP_ARMING_CHECK_DETAIL_3)
+                armingCheckFlags3         : Flag bits to indicate which of the arming checks is failing (type:uint16_t, values:SWOOP_ARMING_CHECK_COMMON)
 
                 '''
                 return MAVLink_swoop_arming_flags_message(armingCheckStatus, armingCheckFlags1, armingCheckFlags2, armingCheckFlags3)
@@ -1197,7 +1247,7 @@ class MAVLink(object):
                 armingCheckStatus         : 0 if all arming checks have passed, false otherwise (type:uint8_t, values:SWOOP_ARMING_CHECKS_PASSED)
                 armingCheckFlags1         : Flag bits to indicate which of the arming checks is failing (type:uint16_t, values:SWOOP_ARMING_CHECK_DETAIL_1)
                 armingCheckFlags2         : Flag bits to indicate which of the arming checks is failing (type:uint16_t, values:SWOOP_ARMING_CHECK_DETAIL_2)
-                armingCheckFlags3         : Flag bits to indicate which of the arming checks is failing (type:uint16_t, values:SWOOP_ARMING_CHECK_DETAIL_3)
+                armingCheckFlags3         : Flag bits to indicate which of the arming checks is failing (type:uint16_t, values:SWOOP_ARMING_CHECK_COMMON)
 
                 '''
                 return self.send(self.swoop_arming_flags_encode(armingCheckStatus, armingCheckFlags1, armingCheckFlags2, armingCheckFlags3), force_mavlink1=force_mavlink1)
@@ -1370,21 +1420,61 @@ class MAVLink(object):
                 '''
                 return self.send(self.swoop_inflight_flags_persistent_encode(inflightFlags, maximumIntensity, hoverAssistIntensity, emergencyLandIntensity, gpsIntensity, vibrationIntensity, hoverMotorIntensity, forwardMotorIntensity, lidarIntensity, hoverBatteryIntensity, forwardBatteryIntensity, altitudeIntensity, windIntensity, hoverAttitudeIntensity, landingIntensity, aerodynamicIntensity, airspeedIntensity, servoIntensity, hoverAssistDetail, emergencyLandDetail, gpsDetail, vibrationDetail, hoverMotorDetail, forwardMotorDetail, lidarDetail, hoverBatteryDetail, forwardBatteryDetail, altitudeDetail, windDetail, hoverAttitudeDetail, landingDetail, aerodynamicDetail, airspeedDetail, servoDetail), force_mavlink1=force_mavlink1)
 
-        def swoop_status_encode(self, flightStatus):
+        def swoop_status_encode(self, flightStatus, waypointType, nextWaypointType):
                 '''
                 Periodic flight status Flag Packet
 
                 flightStatus              : Enumerated type for flight stage (type:uint8_t, values:SWOOP_STATUS_TYPE)
+                waypointType              : Current waypoint type (type:uint8_t)
+                nextWaypointType          : Current waypoint type (type:uint8_t)
 
                 '''
-                return MAVLink_swoop_status_message(flightStatus)
+                return MAVLink_swoop_status_message(flightStatus, waypointType, nextWaypointType)
 
-        def swoop_status_send(self, flightStatus, force_mavlink1=False):
+        def swoop_status_send(self, flightStatus, waypointType, nextWaypointType, force_mavlink1=False):
                 '''
                 Periodic flight status Flag Packet
 
                 flightStatus              : Enumerated type for flight stage (type:uint8_t, values:SWOOP_STATUS_TYPE)
+                waypointType              : Current waypoint type (type:uint8_t)
+                nextWaypointType          : Current waypoint type (type:uint8_t)
 
                 '''
-                return self.send(self.swoop_status_encode(flightStatus), force_mavlink1=force_mavlink1)
+                return self.send(self.swoop_status_encode(flightStatus, waypointType, nextWaypointType), force_mavlink1=force_mavlink1)
+
+        def swoop_energy_encode(self, ForwardEndurance, ForwardHealth, ForwardWHrPortionRemaining, HoverETR, HoverEndurance, HoverWHrPortionRemaining, ForwardTimeToNextLanding, ForwardTimeToEndOfMission, HoverTimeToNextLanding, HoverTimeToEndOfMission):
+                '''
+                range remaining data
+
+                ForwardEndurance          : Forward battery endurance remaining [s] (type:uint16_t)
+                ForwardHealth             : Forward battery healthy (type:uint8_t)
+                ForwardWHrPortionRemaining        : Forward battery percentage left [%] (type:uint8_t)
+                HoverETR                  : Hover battery endurance remaining [s] (type:uint16_t)
+                HoverEndurance            : Hover battery healthy (type:uint8_t)
+                HoverWHrPortionRemaining        : Forward battery percentage left [%] (type:uint8_t)
+                ForwardTimeToNextLanding        : Estimated seconds of forward flight required to get to the next landing [s] (type:uint16_t)
+                ForwardTimeToEndOfMission        : Estimated seconds of forward flight required to get to the end of the mission [s] (type:uint16_t)
+                HoverTimeToNextLanding        : Estimated seconds of hover flight required to get to the next landing [s] (type:uint16_t)
+                HoverTimeToEndOfMission        : Estimated seconds of hover flight required to get to the end of the mission [s] (type:uint16_t)
+
+                '''
+                return MAVLink_swoop_energy_message(ForwardEndurance, ForwardHealth, ForwardWHrPortionRemaining, HoverETR, HoverEndurance, HoverWHrPortionRemaining, ForwardTimeToNextLanding, ForwardTimeToEndOfMission, HoverTimeToNextLanding, HoverTimeToEndOfMission)
+
+        def swoop_energy_send(self, ForwardEndurance, ForwardHealth, ForwardWHrPortionRemaining, HoverETR, HoverEndurance, HoverWHrPortionRemaining, ForwardTimeToNextLanding, ForwardTimeToEndOfMission, HoverTimeToNextLanding, HoverTimeToEndOfMission, force_mavlink1=False):
+                '''
+                range remaining data
+
+                ForwardEndurance          : Forward battery endurance remaining [s] (type:uint16_t)
+                ForwardHealth             : Forward battery healthy (type:uint8_t)
+                ForwardWHrPortionRemaining        : Forward battery percentage left [%] (type:uint8_t)
+                HoverETR                  : Hover battery endurance remaining [s] (type:uint16_t)
+                HoverEndurance            : Hover battery healthy (type:uint8_t)
+                HoverWHrPortionRemaining        : Forward battery percentage left [%] (type:uint8_t)
+                ForwardTimeToNextLanding        : Estimated seconds of forward flight required to get to the next landing [s] (type:uint16_t)
+                ForwardTimeToEndOfMission        : Estimated seconds of forward flight required to get to the end of the mission [s] (type:uint16_t)
+                HoverTimeToNextLanding        : Estimated seconds of hover flight required to get to the next landing [s] (type:uint16_t)
+                HoverTimeToEndOfMission        : Estimated seconds of hover flight required to get to the end of the mission [s] (type:uint16_t)
+
+                '''
+                return self.send(self.swoop_energy_encode(ForwardEndurance, ForwardHealth, ForwardWHrPortionRemaining, HoverETR, HoverEndurance, HoverWHrPortionRemaining, ForwardTimeToNextLanding, ForwardTimeToEndOfMission, HoverTimeToNextLanding, HoverTimeToEndOfMission), force_mavlink1=force_mavlink1)
 
