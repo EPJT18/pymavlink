@@ -758,29 +758,30 @@ class MAVLink_swoop_status_message(MAVLink_message):
         '''
         id = MAVLINK_MSG_ID_SWOOP_STATUS
         name = 'SWOOP_STATUS'
-        fieldnames = ['flightStatus', 'waypointType', 'nextWaypointType']
-        ordered_fieldnames = ['waypointType', 'nextWaypointType', 'flightStatus']
-        fieldtypes = ['uint8_t', 'uint16_t', 'uint16_t']
+        fieldnames = ['flightStatus', 'waypointType', 'nextWaypointType', 'waypointJumper']
+        ordered_fieldnames = ['waypointType', 'nextWaypointType', 'waypointJumper', 'flightStatus']
+        fieldtypes = ['uint8_t', 'uint16_t', 'uint16_t', 'uint16_t']
         fielddisplays_by_name = {}
         fieldenums_by_name = {"flightStatus": "SWOOP_STATUS_TYPE"}
         fieldunits_by_name = {}
-        format = '<HHB'
-        native_format = bytearray('<HHB', 'ascii')
-        orders = [2, 0, 1]
-        lengths = [1, 1, 1]
-        array_lengths = [0, 0, 0]
-        crc_extra = 210
-        unpacker = struct.Struct('<HHB')
+        format = '<HHHB'
+        native_format = bytearray('<HHHB', 'ascii')
+        orders = [3, 0, 1, 2]
+        lengths = [1, 1, 1, 1]
+        array_lengths = [0, 0, 0, 0]
+        crc_extra = 213
+        unpacker = struct.Struct('<HHHB')
 
-        def __init__(self, flightStatus, waypointType, nextWaypointType):
+        def __init__(self, flightStatus, waypointType, nextWaypointType, waypointJumper):
                 MAVLink_message.__init__(self, MAVLink_swoop_status_message.id, MAVLink_swoop_status_message.name)
                 self._fieldnames = MAVLink_swoop_status_message.fieldnames
                 self.flightStatus = flightStatus
                 self.waypointType = waypointType
                 self.nextWaypointType = nextWaypointType
+                self.waypointJumper = waypointJumper
 
         def pack(self, mav, force_mavlink1=False):
-                return MAVLink_message.pack(self, mav, 210, struct.pack('<HHB', self.waypointType, self.nextWaypointType, self.flightStatus), force_mavlink1=force_mavlink1)
+                return MAVLink_message.pack(self, mav, 213, struct.pack('<HHHB', self.waypointType, self.nextWaypointType, self.waypointJumper, self.flightStatus), force_mavlink1=force_mavlink1)
 
 class MAVLink_swoop_energy_message(MAVLink_message):
         '''
@@ -1422,27 +1423,29 @@ class MAVLink(object):
                 '''
                 return self.send(self.swoop_inflight_flags_persistent_encode(inflightFlags, maximumIntensity, hoverAssistIntensity, emergencyLandIntensity, gpsIntensity, vibrationIntensity, hoverMotorIntensity, forwardMotorIntensity, lidarIntensity, hoverBatteryIntensity, forwardBatteryIntensity, altitudeIntensity, windIntensity, hoverAttitudeIntensity, landingIntensity, aerodynamicIntensity, airspeedIntensity, servoIntensity, hoverAssistDetail, emergencyLandDetail, gpsDetail, vibrationDetail, hoverMotorDetail, forwardMotorDetail, lidarDetail, hoverBatteryDetail, forwardBatteryDetail, altitudeDetail, windDetail, hoverAttitudeDetail, landingDetail, aerodynamicDetail, airspeedDetail, servoDetail), force_mavlink1=force_mavlink1)
 
-        def swoop_status_encode(self, flightStatus, waypointType, nextWaypointType):
+        def swoop_status_encode(self, flightStatus, waypointType, nextWaypointType, waypointJumper):
                 '''
                 Periodic flight status Flag Packet
 
                 flightStatus              : Enumerated type for flight stage (type:uint8_t, values:SWOOP_STATUS_TYPE)
                 waypointType              : Current waypoint type (type:uint16_t)
                 nextWaypointType          : Current waypoint type (type:uint16_t)
+                waypointJumper            : waypointJumpCountIterator (type:uint16_t)
 
                 '''
-                return MAVLink_swoop_status_message(flightStatus, waypointType, nextWaypointType)
+                return MAVLink_swoop_status_message(flightStatus, waypointType, nextWaypointType, waypointJumper)
 
-        def swoop_status_send(self, flightStatus, waypointType, nextWaypointType, force_mavlink1=False):
+        def swoop_status_send(self, flightStatus, waypointType, nextWaypointType, waypointJumper, force_mavlink1=False):
                 '''
                 Periodic flight status Flag Packet
 
                 flightStatus              : Enumerated type for flight stage (type:uint8_t, values:SWOOP_STATUS_TYPE)
                 waypointType              : Current waypoint type (type:uint16_t)
                 nextWaypointType          : Current waypoint type (type:uint16_t)
+                waypointJumper            : waypointJumpCountIterator (type:uint16_t)
 
                 '''
-                return self.send(self.swoop_status_encode(flightStatus, waypointType, nextWaypointType), force_mavlink1=force_mavlink1)
+                return self.send(self.swoop_status_encode(flightStatus, waypointType, nextWaypointType, waypointJumper), force_mavlink1=force_mavlink1)
 
         def swoop_energy_encode(self, ForwardEndurance, ForwardHealth, ForwardWHrPortionRemaining, HoverEndurance, HoverHealth, HoverWHrPortionRemaining, ForwardTimeToNextLanding, ForwardTimeToEndOfMission, HoverTimeToNextLanding, HoverTimeToEndOfMission):
                 '''
