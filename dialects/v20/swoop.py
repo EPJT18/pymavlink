@@ -235,6 +235,19 @@ enums['SWOOP_ARMING_CHECKS_PASSED'][1] = EnumEntry('ARMING_CHECK_FAILED', ''''''
 SWOOP_ARMING_CHECKS_PASSED_ENUM_END = 2 # 
 enums['SWOOP_ARMING_CHECKS_PASSED'][2] = EnumEntry('SWOOP_ARMING_CHECKS_PASSED_ENUM_END', '''''')
 
+# SWOOP_TARGET
+enums['SWOOP_TARGET'] = {}
+NO_ISSUES = 0 # 
+enums['SWOOP_TARGET'][0] = EnumEntry('NO_ISSUES', '''''')
+FAILED_PROCEED_WAYPOINT = 1 # 
+enums['SWOOP_TARGET'][1] = EnumEntry('FAILED_PROCEED_WAYPOINT', '''''')
+FAILED_GPS_LAND = 2 # 
+enums['SWOOP_TARGET'][2] = EnumEntry('FAILED_GPS_LAND', '''''')
+FAILED_CONTINGENCY = 3 # 
+enums['SWOOP_TARGET'][3] = EnumEntry('FAILED_CONTINGENCY', '''''')
+SWOOP_TARGET_ENUM_END = 4 # 
+enums['SWOOP_TARGET'][4] = EnumEntry('SWOOP_TARGET_ENUM_END', '''''')
+
 # SWOOP_BATTERY_HEALTH
 enums['SWOOP_BATTERY_HEALTH'] = {}
 BATTERY_NOT_HEATLHY = 0 # 
@@ -597,6 +610,7 @@ MAVLINK_MSG_ID_SWOOP_INFLIGHT_FLAGS_INSTANT = 6902
 MAVLINK_MSG_ID_SWOOP_INFLIGHT_FLAGS_PERSISTENT = 6903
 MAVLINK_MSG_ID_SWOOP_STATUS = 6904
 MAVLINK_MSG_ID_SWOOP_ENERGY = 6905
+MAVLINK_MSG_ID_SWOOP_AIRSPEED = 6906
 
 class MAVLink_swoop_arming_flags_message(MAVLink_message):
         '''
@@ -635,21 +649,21 @@ class MAVLink_swoop_inflight_flags_instant_message(MAVLink_message):
         '''
         id = MAVLINK_MSG_ID_SWOOP_INFLIGHT_FLAGS_INSTANT
         name = 'SWOOP_INFLIGHT_FLAGS_INSTANT'
-        fieldnames = ['inflightFlags', 'maximumIntensity', 'hoverAssistIntensity', 'emergencyLandIntensity', 'gpsIntensity', 'vibrationIntensity', 'hoverMotorIntensity', 'forwardMotorIntensity', 'lidarIntensity', 'hoverBatteryIntensity', 'forwardBatteryIntensity', 'altitudeIntensity', 'windIntensity', 'hoverAttitudeIntensity', 'landingIntensity', 'aerodynamicIntensity', 'airspeedIntensity', 'servoIntensity', 'hoverAssistDetail', 'emergencyLandDetail', 'gpsDetail', 'vibrationDetail', 'hoverMotorDetail', 'forwardMotorDetail', 'lidarDetail', 'hoverBatteryDetail', 'forwardBatteryDetail', 'altitudeDetail', 'windDetail', 'hoverAttitudeDetail', 'landingDetail', 'aerodynamicDetail', 'airspeedDetail', 'servoDetail']
-        ordered_fieldnames = ['inflightFlags', 'maximumIntensity', 'hoverAssistIntensity', 'emergencyLandIntensity', 'gpsIntensity', 'vibrationIntensity', 'hoverMotorIntensity', 'forwardMotorIntensity', 'lidarIntensity', 'hoverBatteryIntensity', 'forwardBatteryIntensity', 'altitudeIntensity', 'windIntensity', 'hoverAttitudeIntensity', 'landingIntensity', 'aerodynamicIntensity', 'airspeedIntensity', 'servoIntensity', 'hoverAssistDetail', 'emergencyLandDetail', 'gpsDetail', 'vibrationDetail', 'hoverMotorDetail', 'forwardMotorDetail', 'lidarDetail', 'hoverBatteryDetail', 'forwardBatteryDetail', 'altitudeDetail', 'windDetail', 'hoverAttitudeDetail', 'landingDetail', 'aerodynamicDetail', 'airspeedDetail', 'servoDetail']
-        fieldtypes = ['uint16_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t']
+        fieldnames = ['inflightFlags', 'maximumIntensity', 'hoverAssistIntensity', 'emergencyLandIntensity', 'gpsIntensity', 'vibrationIntensity', 'hoverMotorIntensity', 'forwardMotorIntensity', 'lidarIntensity', 'hoverBatteryIntensity', 'forwardBatteryIntensity', 'altitudeIntensity', 'windIntensity', 'hoverAttitudeIntensity', 'landingIntensity', 'aerodynamicIntensity', 'airspeedIntensity', 'servoIntensity', 'hoverAssistDetail', 'emergencyLandDetail', 'gpsDetail', 'vibrationDetail', 'hoverMotorDetail', 'forwardMotorDetail', 'lidarDetail', 'hoverBatteryDetail', 'forwardBatteryDetail', 'altitudeDetail', 'windDetail', 'hoverAttitudeDetail', 'landingDetail', 'aerodynamicDetail', 'airspeedDetail', 'servoDetail', 'targetSearchFailed']
+        ordered_fieldnames = ['inflightFlags', 'maximumIntensity', 'hoverAssistIntensity', 'emergencyLandIntensity', 'gpsIntensity', 'vibrationIntensity', 'hoverMotorIntensity', 'forwardMotorIntensity', 'lidarIntensity', 'hoverBatteryIntensity', 'forwardBatteryIntensity', 'altitudeIntensity', 'windIntensity', 'hoverAttitudeIntensity', 'landingIntensity', 'aerodynamicIntensity', 'airspeedIntensity', 'servoIntensity', 'hoverAssistDetail', 'emergencyLandDetail', 'gpsDetail', 'vibrationDetail', 'hoverMotorDetail', 'forwardMotorDetail', 'lidarDetail', 'hoverBatteryDetail', 'forwardBatteryDetail', 'altitudeDetail', 'windDetail', 'hoverAttitudeDetail', 'landingDetail', 'aerodynamicDetail', 'airspeedDetail', 'servoDetail', 'targetSearchFailed']
+        fieldtypes = ['uint16_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t', 'uint8_t']
         fielddisplays_by_name = {}
-        fieldenums_by_name = {"inflightFlags": "SWOOP_INFLIGHT_FLAGS", "maximumIntensity": "SWOOP_FLAG_INTENSITY", "hoverAssistIntensity": "SWOOP_FLAG_INTENSITY", "emergencyLandIntensity": "SWOOP_FLAG_INTENSITY", "gpsIntensity": "SWOOP_FLAG_INTENSITY", "vibrationIntensity": "SWOOP_FLAG_INTENSITY", "hoverMotorIntensity": "SWOOP_FLAG_INTENSITY", "forwardMotorIntensity": "SWOOP_FLAG_INTENSITY", "lidarIntensity": "SWOOP_FLAG_INTENSITY", "hoverBatteryIntensity": "SWOOP_FLAG_INTENSITY", "forwardBatteryIntensity": "SWOOP_FLAG_INTENSITY", "altitudeIntensity": "SWOOP_FLAG_INTENSITY", "windIntensity": "SWOOP_FLAG_INTENSITY", "hoverAttitudeIntensity": "SWOOP_FLAG_INTENSITY", "landingIntensity": "SWOOP_FLAG_INTENSITY", "aerodynamicIntensity": "SWOOP_FLAG_INTENSITY", "airspeedIntensity": "SWOOP_FLAG_INTENSITY", "servoIntensity": "SWOOP_FLAG_INTENSITY", "hoverAssistDetail": "SWOOP_HOVER_ASSIST_DETAIL", "emergencyLandDetail": "SWOOP_EMERGENCY_LAND_DETAIL", "gpsDetail": "SWOOP_GPS_HEALTH_DETAIL", "vibrationDetail": "SWOOP_NO_DETAIL", "hoverMotorDetail": "SWOOP_HOVER_MOTOR_FAIL_DETAIL", "forwardMotorDetail": "SWOOP_FORWARD_MOTOR_FAIL_DETAIL", "lidarDetail": "LIDAR_DETAIL", "hoverBatteryDetail": "FORWARD_BATTERY_DETAIL", "forwardBatteryDetail": "HOVER_BATTERY_DETAIL", "altitudeDetail": "ALTITTUDE_DETAIL", "windDetail": "SWOOP_NO_DETAIL", "hoverAttitudeDetail": "SWOOP_NO_DETAIL", "landingDetail": "LANDING_DETAIL", "aerodynamicDetail": "AERODYNAMIC_DETAIL", "airspeedDetail": "AIRSPEED_DETAIL", "servoDetail": "SERVO_DETAIL"}
+        fieldenums_by_name = {"inflightFlags": "SWOOP_INFLIGHT_FLAGS", "maximumIntensity": "SWOOP_FLAG_INTENSITY", "hoverAssistIntensity": "SWOOP_FLAG_INTENSITY", "emergencyLandIntensity": "SWOOP_FLAG_INTENSITY", "gpsIntensity": "SWOOP_FLAG_INTENSITY", "vibrationIntensity": "SWOOP_FLAG_INTENSITY", "hoverMotorIntensity": "SWOOP_FLAG_INTENSITY", "forwardMotorIntensity": "SWOOP_FLAG_INTENSITY", "lidarIntensity": "SWOOP_FLAG_INTENSITY", "hoverBatteryIntensity": "SWOOP_FLAG_INTENSITY", "forwardBatteryIntensity": "SWOOP_FLAG_INTENSITY", "altitudeIntensity": "SWOOP_FLAG_INTENSITY", "windIntensity": "SWOOP_FLAG_INTENSITY", "hoverAttitudeIntensity": "SWOOP_FLAG_INTENSITY", "landingIntensity": "SWOOP_FLAG_INTENSITY", "aerodynamicIntensity": "SWOOP_FLAG_INTENSITY", "airspeedIntensity": "SWOOP_FLAG_INTENSITY", "servoIntensity": "SWOOP_FLAG_INTENSITY", "hoverAssistDetail": "SWOOP_HOVER_ASSIST_DETAIL", "emergencyLandDetail": "SWOOP_EMERGENCY_LAND_DETAIL", "gpsDetail": "SWOOP_GPS_HEALTH_DETAIL", "vibrationDetail": "SWOOP_NO_DETAIL", "hoverMotorDetail": "SWOOP_HOVER_MOTOR_FAIL_DETAIL", "forwardMotorDetail": "SWOOP_FORWARD_MOTOR_FAIL_DETAIL", "lidarDetail": "LIDAR_DETAIL", "hoverBatteryDetail": "FORWARD_BATTERY_DETAIL", "forwardBatteryDetail": "HOVER_BATTERY_DETAIL", "altitudeDetail": "ALTITTUDE_DETAIL", "windDetail": "SWOOP_NO_DETAIL", "hoverAttitudeDetail": "SWOOP_NO_DETAIL", "landingDetail": "LANDING_DETAIL", "aerodynamicDetail": "AERODYNAMIC_DETAIL", "airspeedDetail": "AIRSPEED_DETAIL", "servoDetail": "SERVO_DETAIL", "targetSearchFailed": "SWOOP_TARGET"}
         fieldunits_by_name = {}
-        format = '<HBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'
-        native_format = bytearray('<HBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', 'ascii')
-        orders = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33]
-        lengths = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        array_lengths = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        crc_extra = 127
-        unpacker = struct.Struct('<HBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')
+        format = '<HBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'
+        native_format = bytearray('<HBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', 'ascii')
+        orders = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34]
+        lengths = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        array_lengths = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        crc_extra = 94
+        unpacker = struct.Struct('<HBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')
 
-        def __init__(self, inflightFlags, maximumIntensity, hoverAssistIntensity, emergencyLandIntensity, gpsIntensity, vibrationIntensity, hoverMotorIntensity, forwardMotorIntensity, lidarIntensity, hoverBatteryIntensity, forwardBatteryIntensity, altitudeIntensity, windIntensity, hoverAttitudeIntensity, landingIntensity, aerodynamicIntensity, airspeedIntensity, servoIntensity, hoverAssistDetail, emergencyLandDetail, gpsDetail, vibrationDetail, hoverMotorDetail, forwardMotorDetail, lidarDetail, hoverBatteryDetail, forwardBatteryDetail, altitudeDetail, windDetail, hoverAttitudeDetail, landingDetail, aerodynamicDetail, airspeedDetail, servoDetail):
+        def __init__(self, inflightFlags, maximumIntensity, hoverAssistIntensity, emergencyLandIntensity, gpsIntensity, vibrationIntensity, hoverMotorIntensity, forwardMotorIntensity, lidarIntensity, hoverBatteryIntensity, forwardBatteryIntensity, altitudeIntensity, windIntensity, hoverAttitudeIntensity, landingIntensity, aerodynamicIntensity, airspeedIntensity, servoIntensity, hoverAssistDetail, emergencyLandDetail, gpsDetail, vibrationDetail, hoverMotorDetail, forwardMotorDetail, lidarDetail, hoverBatteryDetail, forwardBatteryDetail, altitudeDetail, windDetail, hoverAttitudeDetail, landingDetail, aerodynamicDetail, airspeedDetail, servoDetail, targetSearchFailed):
                 MAVLink_message.__init__(self, MAVLink_swoop_inflight_flags_instant_message.id, MAVLink_swoop_inflight_flags_instant_message.name)
                 self._fieldnames = MAVLink_swoop_inflight_flags_instant_message.fieldnames
                 self.inflightFlags = inflightFlags
@@ -686,9 +700,10 @@ class MAVLink_swoop_inflight_flags_instant_message(MAVLink_message):
                 self.aerodynamicDetail = aerodynamicDetail
                 self.airspeedDetail = airspeedDetail
                 self.servoDetail = servoDetail
+                self.targetSearchFailed = targetSearchFailed
 
         def pack(self, mav, force_mavlink1=False):
-                return MAVLink_message.pack(self, mav, 127, struct.pack('<HBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', self.inflightFlags, self.maximumIntensity, self.hoverAssistIntensity, self.emergencyLandIntensity, self.gpsIntensity, self.vibrationIntensity, self.hoverMotorIntensity, self.forwardMotorIntensity, self.lidarIntensity, self.hoverBatteryIntensity, self.forwardBatteryIntensity, self.altitudeIntensity, self.windIntensity, self.hoverAttitudeIntensity, self.landingIntensity, self.aerodynamicIntensity, self.airspeedIntensity, self.servoIntensity, self.hoverAssistDetail, self.emergencyLandDetail, self.gpsDetail, self.vibrationDetail, self.hoverMotorDetail, self.forwardMotorDetail, self.lidarDetail, self.hoverBatteryDetail, self.forwardBatteryDetail, self.altitudeDetail, self.windDetail, self.hoverAttitudeDetail, self.landingDetail, self.aerodynamicDetail, self.airspeedDetail, self.servoDetail), force_mavlink1=force_mavlink1)
+                return MAVLink_message.pack(self, mav, 94, struct.pack('<HBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', self.inflightFlags, self.maximumIntensity, self.hoverAssistIntensity, self.emergencyLandIntensity, self.gpsIntensity, self.vibrationIntensity, self.hoverMotorIntensity, self.forwardMotorIntensity, self.lidarIntensity, self.hoverBatteryIntensity, self.forwardBatteryIntensity, self.altitudeIntensity, self.windIntensity, self.hoverAttitudeIntensity, self.landingIntensity, self.aerodynamicIntensity, self.airspeedIntensity, self.servoIntensity, self.hoverAssistDetail, self.emergencyLandDetail, self.gpsDetail, self.vibrationDetail, self.hoverMotorDetail, self.forwardMotorDetail, self.lidarDetail, self.hoverBatteryDetail, self.forwardBatteryDetail, self.altitudeDetail, self.windDetail, self.hoverAttitudeDetail, self.landingDetail, self.aerodynamicDetail, self.airspeedDetail, self.servoDetail, self.targetSearchFailed), force_mavlink1=force_mavlink1)
 
 class MAVLink_swoop_inflight_flags_persistent_message(MAVLink_message):
         '''
@@ -820,6 +835,36 @@ class MAVLink_swoop_energy_message(MAVLink_message):
         def pack(self, mav, force_mavlink1=False):
                 return MAVLink_message.pack(self, mav, 110, struct.pack('<HHHHHHBBBB', self.ForwardEndurance, self.HoverEndurance, self.ForwardTimeToNextLanding, self.ForwardTimeToEndOfMission, self.HoverTimeToNextLanding, self.HoverTimeToEndOfMission, self.ForwardHealth, self.ForwardWHrPortionRemaining, self.HoverHealth, self.HoverWHrPortionRemaining), force_mavlink1=force_mavlink1)
 
+class MAVLink_swoop_airspeed_message(MAVLink_message):
+        '''
+        Periodic flight status Flag Packet
+        '''
+        id = MAVLINK_MSG_ID_SWOOP_AIRSPEED
+        name = 'SWOOP_AIRSPEED'
+        fieldnames = ['trueAirspeed', 'trueTrimSpeed', 'eas2tas']
+        ordered_fieldnames = ['trueAirspeed', 'trueTrimSpeed', 'eas2tas']
+        fieldtypes = ['uint16_t', 'uint16_t', 'uint16_t']
+        fielddisplays_by_name = {}
+        fieldenums_by_name = {}
+        fieldunits_by_name = {}
+        format = '<HHH'
+        native_format = bytearray('<HHH', 'ascii')
+        orders = [0, 1, 2]
+        lengths = [1, 1, 1]
+        array_lengths = [0, 0, 0]
+        crc_extra = 14
+        unpacker = struct.Struct('<HHH')
+
+        def __init__(self, trueAirspeed, trueTrimSpeed, eas2tas):
+                MAVLink_message.__init__(self, MAVLink_swoop_airspeed_message.id, MAVLink_swoop_airspeed_message.name)
+                self._fieldnames = MAVLink_swoop_airspeed_message.fieldnames
+                self.trueAirspeed = trueAirspeed
+                self.trueTrimSpeed = trueTrimSpeed
+                self.eas2tas = eas2tas
+
+        def pack(self, mav, force_mavlink1=False):
+                return MAVLink_message.pack(self, mav, 14, struct.pack('<HHH', self.trueAirspeed, self.trueTrimSpeed, self.eas2tas), force_mavlink1=force_mavlink1)
+
 
 mavlink_map = {
         MAVLINK_MSG_ID_SWOOP_ARMING_FLAGS : MAVLink_swoop_arming_flags_message,
@@ -827,6 +872,7 @@ mavlink_map = {
         MAVLINK_MSG_ID_SWOOP_INFLIGHT_FLAGS_PERSISTENT : MAVLink_swoop_inflight_flags_persistent_message,
         MAVLINK_MSG_ID_SWOOP_STATUS : MAVLink_swoop_status_message,
         MAVLINK_MSG_ID_SWOOP_ENERGY : MAVLink_swoop_energy_message,
+        MAVLINK_MSG_ID_SWOOP_AIRSPEED : MAVLink_swoop_airspeed_message,
 }
 
 class MAVError(Exception):
@@ -1255,7 +1301,7 @@ class MAVLink(object):
                 '''
                 return self.send(self.swoop_arming_flags_encode(armingCheckStatus, armingCheckFlags1, armingCheckFlags2, armingCheckFlags3), force_mavlink1=force_mavlink1)
 
-        def swoop_inflight_flags_instant_encode(self, inflightFlags, maximumIntensity, hoverAssistIntensity, emergencyLandIntensity, gpsIntensity, vibrationIntensity, hoverMotorIntensity, forwardMotorIntensity, lidarIntensity, hoverBatteryIntensity, forwardBatteryIntensity, altitudeIntensity, windIntensity, hoverAttitudeIntensity, landingIntensity, aerodynamicIntensity, airspeedIntensity, servoIntensity, hoverAssistDetail, emergencyLandDetail, gpsDetail, vibrationDetail, hoverMotorDetail, forwardMotorDetail, lidarDetail, hoverBatteryDetail, forwardBatteryDetail, altitudeDetail, windDetail, hoverAttitudeDetail, landingDetail, aerodynamicDetail, airspeedDetail, servoDetail):
+        def swoop_inflight_flags_instant_encode(self, inflightFlags, maximumIntensity, hoverAssistIntensity, emergencyLandIntensity, gpsIntensity, vibrationIntensity, hoverMotorIntensity, forwardMotorIntensity, lidarIntensity, hoverBatteryIntensity, forwardBatteryIntensity, altitudeIntensity, windIntensity, hoverAttitudeIntensity, landingIntensity, aerodynamicIntensity, airspeedIntensity, servoIntensity, hoverAssistDetail, emergencyLandDetail, gpsDetail, vibrationDetail, hoverMotorDetail, forwardMotorDetail, lidarDetail, hoverBatteryDetail, forwardBatteryDetail, altitudeDetail, windDetail, hoverAttitudeDetail, landingDetail, aerodynamicDetail, airspeedDetail, servoDetail, targetSearchFailed):
                 '''
                 Periodic INFLIGHT Flag Packet
 
@@ -1293,11 +1339,12 @@ class MAVLink(object):
                 aerodynamicDetail         : Flag bits to indicate detail of aerodymanic issues (type:uint8_t, values:AERODYNAMIC_DETAIL)
                 airspeedDetail            : Flag bits to indicate detail of Airspeed issues (type:uint8_t, values:AIRSPEED_DETAIL)
                 servoDetail               : Flag bits to indicate detail of Servo issues (type:uint8_t, values:SERVO_DETAIL)
+                targetSearchFailed        : Flag bit to indicate if VLAND search failed (type:uint8_t, values:SWOOP_TARGET)
 
                 '''
-                return MAVLink_swoop_inflight_flags_instant_message(inflightFlags, maximumIntensity, hoverAssistIntensity, emergencyLandIntensity, gpsIntensity, vibrationIntensity, hoverMotorIntensity, forwardMotorIntensity, lidarIntensity, hoverBatteryIntensity, forwardBatteryIntensity, altitudeIntensity, windIntensity, hoverAttitudeIntensity, landingIntensity, aerodynamicIntensity, airspeedIntensity, servoIntensity, hoverAssistDetail, emergencyLandDetail, gpsDetail, vibrationDetail, hoverMotorDetail, forwardMotorDetail, lidarDetail, hoverBatteryDetail, forwardBatteryDetail, altitudeDetail, windDetail, hoverAttitudeDetail, landingDetail, aerodynamicDetail, airspeedDetail, servoDetail)
+                return MAVLink_swoop_inflight_flags_instant_message(inflightFlags, maximumIntensity, hoverAssistIntensity, emergencyLandIntensity, gpsIntensity, vibrationIntensity, hoverMotorIntensity, forwardMotorIntensity, lidarIntensity, hoverBatteryIntensity, forwardBatteryIntensity, altitudeIntensity, windIntensity, hoverAttitudeIntensity, landingIntensity, aerodynamicIntensity, airspeedIntensity, servoIntensity, hoverAssistDetail, emergencyLandDetail, gpsDetail, vibrationDetail, hoverMotorDetail, forwardMotorDetail, lidarDetail, hoverBatteryDetail, forwardBatteryDetail, altitudeDetail, windDetail, hoverAttitudeDetail, landingDetail, aerodynamicDetail, airspeedDetail, servoDetail, targetSearchFailed)
 
-        def swoop_inflight_flags_instant_send(self, inflightFlags, maximumIntensity, hoverAssistIntensity, emergencyLandIntensity, gpsIntensity, vibrationIntensity, hoverMotorIntensity, forwardMotorIntensity, lidarIntensity, hoverBatteryIntensity, forwardBatteryIntensity, altitudeIntensity, windIntensity, hoverAttitudeIntensity, landingIntensity, aerodynamicIntensity, airspeedIntensity, servoIntensity, hoverAssistDetail, emergencyLandDetail, gpsDetail, vibrationDetail, hoverMotorDetail, forwardMotorDetail, lidarDetail, hoverBatteryDetail, forwardBatteryDetail, altitudeDetail, windDetail, hoverAttitudeDetail, landingDetail, aerodynamicDetail, airspeedDetail, servoDetail, force_mavlink1=False):
+        def swoop_inflight_flags_instant_send(self, inflightFlags, maximumIntensity, hoverAssistIntensity, emergencyLandIntensity, gpsIntensity, vibrationIntensity, hoverMotorIntensity, forwardMotorIntensity, lidarIntensity, hoverBatteryIntensity, forwardBatteryIntensity, altitudeIntensity, windIntensity, hoverAttitudeIntensity, landingIntensity, aerodynamicIntensity, airspeedIntensity, servoIntensity, hoverAssistDetail, emergencyLandDetail, gpsDetail, vibrationDetail, hoverMotorDetail, forwardMotorDetail, lidarDetail, hoverBatteryDetail, forwardBatteryDetail, altitudeDetail, windDetail, hoverAttitudeDetail, landingDetail, aerodynamicDetail, airspeedDetail, servoDetail, targetSearchFailed, force_mavlink1=False):
                 '''
                 Periodic INFLIGHT Flag Packet
 
@@ -1335,9 +1382,10 @@ class MAVLink(object):
                 aerodynamicDetail         : Flag bits to indicate detail of aerodymanic issues (type:uint8_t, values:AERODYNAMIC_DETAIL)
                 airspeedDetail            : Flag bits to indicate detail of Airspeed issues (type:uint8_t, values:AIRSPEED_DETAIL)
                 servoDetail               : Flag bits to indicate detail of Servo issues (type:uint8_t, values:SERVO_DETAIL)
+                targetSearchFailed        : Flag bit to indicate if VLAND search failed (type:uint8_t, values:SWOOP_TARGET)
 
                 '''
-                return self.send(self.swoop_inflight_flags_instant_encode(inflightFlags, maximumIntensity, hoverAssistIntensity, emergencyLandIntensity, gpsIntensity, vibrationIntensity, hoverMotorIntensity, forwardMotorIntensity, lidarIntensity, hoverBatteryIntensity, forwardBatteryIntensity, altitudeIntensity, windIntensity, hoverAttitudeIntensity, landingIntensity, aerodynamicIntensity, airspeedIntensity, servoIntensity, hoverAssistDetail, emergencyLandDetail, gpsDetail, vibrationDetail, hoverMotorDetail, forwardMotorDetail, lidarDetail, hoverBatteryDetail, forwardBatteryDetail, altitudeDetail, windDetail, hoverAttitudeDetail, landingDetail, aerodynamicDetail, airspeedDetail, servoDetail), force_mavlink1=force_mavlink1)
+                return self.send(self.swoop_inflight_flags_instant_encode(inflightFlags, maximumIntensity, hoverAssistIntensity, emergencyLandIntensity, gpsIntensity, vibrationIntensity, hoverMotorIntensity, forwardMotorIntensity, lidarIntensity, hoverBatteryIntensity, forwardBatteryIntensity, altitudeIntensity, windIntensity, hoverAttitudeIntensity, landingIntensity, aerodynamicIntensity, airspeedIntensity, servoIntensity, hoverAssistDetail, emergencyLandDetail, gpsDetail, vibrationDetail, hoverMotorDetail, forwardMotorDetail, lidarDetail, hoverBatteryDetail, forwardBatteryDetail, altitudeDetail, windDetail, hoverAttitudeDetail, landingDetail, aerodynamicDetail, airspeedDetail, servoDetail, targetSearchFailed), force_mavlink1=force_mavlink1)
 
         def swoop_inflight_flags_persistent_encode(self, inflightFlags, maximumIntensity, hoverAssistIntensity, emergencyLandIntensity, gpsIntensity, vibrationIntensity, hoverMotorIntensity, forwardMotorIntensity, lidarIntensity, hoverBatteryIntensity, forwardBatteryIntensity, altitudeIntensity, windIntensity, hoverAttitudeIntensity, landingIntensity, aerodynamicIntensity, airspeedIntensity, servoIntensity, hoverAssistDetail, emergencyLandDetail, gpsDetail, vibrationDetail, hoverMotorDetail, forwardMotorDetail, lidarDetail, hoverBatteryDetail, forwardBatteryDetail, altitudeDetail, windDetail, hoverAttitudeDetail, landingDetail, aerodynamicDetail, airspeedDetail, servoDetail):
                 '''
@@ -1482,4 +1530,26 @@ class MAVLink(object):
 
                 '''
                 return self.send(self.swoop_energy_encode(ForwardEndurance, ForwardHealth, ForwardWHrPortionRemaining, HoverEndurance, HoverHealth, HoverWHrPortionRemaining, ForwardTimeToNextLanding, ForwardTimeToEndOfMission, HoverTimeToNextLanding, HoverTimeToEndOfMission), force_mavlink1=force_mavlink1)
+
+        def swoop_airspeed_encode(self, trueAirspeed, trueTrimSpeed, eas2tas):
+                '''
+                Periodic flight status Flag Packet
+
+                trueAirspeed              : Enumerated type for flight stage (type:uint16_t)
+                trueTrimSpeed             : Current waypoint type (type:uint16_t)
+                eas2tas                   :  (type:uint16_t)
+
+                '''
+                return MAVLink_swoop_airspeed_message(trueAirspeed, trueTrimSpeed, eas2tas)
+
+        def swoop_airspeed_send(self, trueAirspeed, trueTrimSpeed, eas2tas, force_mavlink1=False):
+                '''
+                Periodic flight status Flag Packet
+
+                trueAirspeed              : Enumerated type for flight stage (type:uint16_t)
+                trueTrimSpeed             : Current waypoint type (type:uint16_t)
+                eas2tas                   :  (type:uint16_t)
+
+                '''
+                return self.send(self.swoop_airspeed_encode(trueAirspeed, trueTrimSpeed, eas2tas), force_mavlink1=force_mavlink1)
 
