@@ -96,7 +96,7 @@ class custom_build_py(build_py):
         build_py.run(self)
 
 
-setup (name = 'swoop_pymavlink',
+setup (name = 'pymavlink',
        version = version,
        description = 'Python MAVLink code',
        long_description = ('A Python library for handling MAVLink protocol streams and log files. This allows for the '
