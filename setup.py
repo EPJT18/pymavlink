@@ -13,7 +13,7 @@ except LookupError:
 from setuptools import setup, Extension
 import glob, os, shutil, fnmatch, platform, sys
 
-version = '2.4.1.s2'
+version = '3.5.0'
 
 
 def generate_content():
@@ -96,7 +96,7 @@ class custom_build_py(build_py):
         build_py.run(self)
 
 
-setup (name = 'pymavlink',
+setup (name = 'swoop-pymavlink',
        version = version,
        description = 'Python MAVLink code',
        long_description = ('A Python library for handling MAVLink protocol streams and log files. This allows for the '
