@@ -352,12 +352,10 @@ enums['SWOOP_ARMING_CHECK_COMMON'][1025] = EnumEntry('SWOOP_ARMING_CHECK_COMMON_
 enums['SWOOP_ADSB_FLAGS'] = {}
 SWOOP_VEHICLE_DETECTED = 1 # 
 enums['SWOOP_ADSB_FLAGS'][1] = EnumEntry('SWOOP_VEHICLE_DETECTED', '''''')
-SWOOP_W_THREAT_DETECTED = 2 # 
-enums['SWOOP_ADSB_FLAGS'][2] = EnumEntry('SWOOP_W_THREAT_DETECTED', '''''')
-SWOOP_F_THREAT_DETECTED = 4 # 
-enums['SWOOP_ADSB_FLAGS'][4] = EnumEntry('SWOOP_F_THREAT_DETECTED', '''''')
-SWOOP_ADSB_FLAGS_ENUM_END = 5 # 
-enums['SWOOP_ADSB_FLAGS'][5] = EnumEntry('SWOOP_ADSB_FLAGS_ENUM_END', '''''')
+SWOOP_THREAT_DETECTED = 2 # 
+enums['SWOOP_ADSB_FLAGS'][2] = EnumEntry('SWOOP_THREAT_DETECTED', '''''')
+SWOOP_ADSB_FLAGS_ENUM_END = 3 # 
+enums['SWOOP_ADSB_FLAGS'][3] = EnumEntry('SWOOP_ADSB_FLAGS_ENUM_END', '''''')
 
 # SWOOP_FLAG_INTENSITY
 enums['SWOOP_FLAG_INTENSITY'] = {}
@@ -728,30 +726,31 @@ class MAVLink_swoop_status_message(MAVLink_message):
         '''
         id = MAVLINK_MSG_ID_SWOOP_STATUS
         name = 'SWOOP_STATUS'
-        fieldnames = ['flightStatus', 'waypointType', 'nextWaypointType', 'waypointJumper']
-        ordered_fieldnames = ['waypointType', 'nextWaypointType', 'waypointJumper', 'flightStatus']
-        fieldtypes = ['uint8_t', 'uint16_t', 'uint16_t', 'uint16_t']
+        fieldnames = ['flightStatus', 'waypointType', 'nextWaypointType', 'waypointJumper', 'nextWaypoint']
+        ordered_fieldnames = ['waypointType', 'nextWaypointType', 'waypointJumper', 'nextWaypoint', 'flightStatus']
+        fieldtypes = ['uint8_t', 'uint16_t', 'uint16_t', 'uint16_t', 'uint16_t']
         fielddisplays_by_name = {}
         fieldenums_by_name = {"flightStatus": "SWOOP_STATUS_TYPE"}
         fieldunits_by_name = {}
-        format = '<HHHB'
-        native_format = bytearray('<HHHB', 'ascii')
-        orders = [3, 0, 1, 2]
-        lengths = [1, 1, 1, 1]
-        array_lengths = [0, 0, 0, 0]
-        crc_extra = 213
-        unpacker = struct.Struct('<HHHB')
+        format = '<HHHHB'
+        native_format = bytearray('<HHHHB', 'ascii')
+        orders = [4, 0, 1, 2, 3]
+        lengths = [1, 1, 1, 1, 1]
+        array_lengths = [0, 0, 0, 0, 0]
+        crc_extra = 216
+        unpacker = struct.Struct('<HHHHB')
 
-        def __init__(self, flightStatus, waypointType, nextWaypointType, waypointJumper):
+        def __init__(self, flightStatus, waypointType, nextWaypointType, waypointJumper, nextWaypoint):
                 MAVLink_message.__init__(self, MAVLink_swoop_status_message.id, MAVLink_swoop_status_message.name)
                 self._fieldnames = MAVLink_swoop_status_message.fieldnames
                 self.flightStatus = flightStatus
                 self.waypointType = waypointType
                 self.nextWaypointType = nextWaypointType
                 self.waypointJumper = waypointJumper
+                self.nextWaypoint = nextWaypoint
 
         def pack(self, mav, force_mavlink1=False):
-                return MAVLink_message.pack(self, mav, 213, struct.pack('<HHHB', self.waypointType, self.nextWaypointType, self.waypointJumper, self.flightStatus), force_mavlink1=force_mavlink1)
+                return MAVLink_message.pack(self, mav, 216, struct.pack('<HHHHB', self.waypointType, self.nextWaypointType, self.waypointJumper, self.nextWaypoint, self.flightStatus), force_mavlink1=force_mavlink1)
 
 class MAVLink_swoop_energy_message(MAVLink_message):
         '''
@@ -1347,7 +1346,7 @@ class MAVLink(object):
                 '''
                 return self.send(self.swoop_inflight_flags_instant_encode(inflightFlags, maximumIntensity, hoverAssistIntensity, emergencyLandIntensity, gpsIntensity, vibrationIntensity, hoverMotorIntensity, forwardMotorIntensity, lidarIntensity, hoverBatteryIntensity, forwardBatteryIntensity, altitudeIntensity, windIntensity, hoverAttitudeIntensity, landingIntensity, aerodynamicIntensity, airspeedIntensity, servoIntensity, targetSearchFailedIntensity, adsbFlagsIntensity, hoverAssistDetail, emergencyLandDetail, gpsDetail, vibrationDetail, hoverMotorDetail, forwardMotorDetail, lidarDetail, hoverBatteryDetail, forwardBatteryDetail, altitudeDetail, windDetail, hoverAttitudeDetail, landingDetail, aerodynamicDetail, airspeedDetail, servoDetail, targetSearchFailedDetail, adsbFlagsDetail), force_mavlink1=force_mavlink1)
 
-        def swoop_status_encode(self, flightStatus, waypointType, nextWaypointType, waypointJumper):
+        def swoop_status_encode(self, flightStatus, waypointType, nextWaypointType, waypointJumper, nextWaypoint):
                 '''
                 Periodic flight status Flag Packet
 
@@ -1355,11 +1354,12 @@ class MAVLink(object):
                 waypointType              : Current waypoint type (type:uint16_t)
                 nextWaypointType          : Current waypoint type (type:uint16_t)
                 waypointJumper            : waypointJumpCountIterator (type:uint16_t)
+                nextWaypoint              : The next waypoint number (type:uint16_t)
 
                 '''
-                return MAVLink_swoop_status_message(flightStatus, waypointType, nextWaypointType, waypointJumper)
+                return MAVLink_swoop_status_message(flightStatus, waypointType, nextWaypointType, waypointJumper, nextWaypoint)
 
-        def swoop_status_send(self, flightStatus, waypointType, nextWaypointType, waypointJumper, force_mavlink1=False):
+        def swoop_status_send(self, flightStatus, waypointType, nextWaypointType, waypointJumper, nextWaypoint, force_mavlink1=False):
                 '''
                 Periodic flight status Flag Packet
 
@@ -1367,9 +1367,10 @@ class MAVLink(object):
                 waypointType              : Current waypoint type (type:uint16_t)
                 nextWaypointType          : Current waypoint type (type:uint16_t)
                 waypointJumper            : waypointJumpCountIterator (type:uint16_t)
+                nextWaypoint              : The next waypoint number (type:uint16_t)
 
                 '''
-                return self.send(self.swoop_status_encode(flightStatus, waypointType, nextWaypointType, waypointJumper), force_mavlink1=force_mavlink1)
+                return self.send(self.swoop_status_encode(flightStatus, waypointType, nextWaypointType, waypointJumper, nextWaypoint), force_mavlink1=force_mavlink1)
 
         def swoop_energy_encode(self, ForwardEndurance, ForwardHealth, ForwardWHrPortionRemaining, HoverEndurance, HoverHealth, HoverWHrPortionRemaining, ForwardTimeToNextLanding, ForwardTimeToEndOfMission, HoverTimeToNextLanding, HoverTimeToEndOfMission):
                 '''

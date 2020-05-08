@@ -81,8 +81,7 @@
     <enum name="SWOOP_ADSB_FLAGS">
       <description>Flag bits to indicate intensity of inflight issues</description>
       <entry value="1" name="SWOOP_VEHICLE_DETECTED"/><!-- 1 -->
-      <entry value="2" name="SWOOP_W_THREAT_DETECTED"/><!-- 2 -->
-      <entry value="4" name="SWOOP_F_THREAT_DETECTED"/><!-- 2 -->
+      <entry value="2" name="SWOOP_THREAT_DETECTED"/><!-- 2 -->
     </enum>
 
 
@@ -302,6 +301,7 @@
       <field type="uint16_t" name="waypointType"> Current waypoint type</field>
       <field type="uint16_t" name="nextWaypointType"> Current waypoint type</field>
       <field type="uint16_t" name="waypointJumper"> waypointJumpCountIterator</field>
+      <field type="uint16_t" name="nextWaypoint"> The next waypoint number </field>
     </message>
 
     <message id="6905" name="SWOOP_ENERGY">
