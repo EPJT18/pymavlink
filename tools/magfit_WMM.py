@@ -85,8 +85,8 @@ def correct(MAG, BAT, c):
     mag = mat * mag
 
     # apply compassmot corrections
-    if BAT is not None and not math.isnan(BAT.Curr):
-        mag += c.cmot * BAT.Curr
+    if BAT is not None and not math.isnan(BAT.A):
+        mag += c.cmot * BAT.A
 
     return mag
 
@@ -205,8 +205,8 @@ def remove_offsets(MAG, BAT, c):
     correction_matrix = correction_matrix.invert()
 
     field = Vector3(MAG.MagX, MAG.MagY, MAG.MagZ)
-    if BAT is not None and not math.isnan(BAT.Curr):
-        field -= c.cmot * BAT.Curr
+    if BAT is not None and not math.isnan(BAT.A):
+        field -= c.cmot * BAT.A
     field = correction_matrix * field
     field *= 1.0 / c.scaling
     field -= Vector3(MAG.OfsX, MAG.OfsY, MAG.OfsZ)
