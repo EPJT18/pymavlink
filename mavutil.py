@@ -604,10 +604,8 @@ class mavfile(object):
 
     def mode_mapping(self):
         '''return dictionary mapping mode names to numbers, or None if unknown'''
-        mav_type = self.field('HEARTBEAT', 'type', self.mav_type)
-        mav_autopilot = self.field('HEARTBEAT', 'autopilot', None)
-        if mav_autopilot == mavlink.MAV_AUTOPILOT_PX4:
-            return px4_map
+        mav_type = self.mav_type
+
         if mav_type is None:
             return None
         map = None
