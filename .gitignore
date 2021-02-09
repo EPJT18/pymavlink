@@ -12,7 +12,7 @@ generator/message_definitions
 *.swp
 MANIFEST
 dist/
-pymavlink.egg-info/
+swoop_pymavlink.egg-info/
 .pydevproject
 .project
 .ropeproject
