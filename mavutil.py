@@ -1875,6 +1875,7 @@ mode_mapping_apm = {
     20 : 'QLAND',
     21 : 'QRTL',
     22 : 'QAUTOTUNE',
+    24 : 'QSLAVE' ,
     }
 mode_mapping_acm = {
     0 : 'STABILIZE',
